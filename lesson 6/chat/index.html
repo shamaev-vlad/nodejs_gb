@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Чат</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      #message-input { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      input { border: 0; padding: 10px; width: 90%; margin-right: 0.5%; }
+    </style>
+    <script src="https://cdn.socket.io/4.1.1/socket.io.min.js" integrity="sha384-cdrFIqe3RasCMNE0jeFG9xJHog/tgOVC1E9Lzve8LQN1g5WUHo0Kvk1mawWjxX7a" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div>
+        <div id="message-input">
+      <input type="text" id='textInput'>
+    </div>
+      <script>
+        const writeln = (msg) => {
+          const div = document.createElement('div')
+          div.innerText = msg
+          document.body.append(div)
+        }
+        const socket = io('http://localhost:3000');
+
+        const input = document.getElementById('textInput')
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter'){
+            const msgValue = `${socket.id}: ${input.value}`
+            socket.emit("message", msgValue)
+            writeln(msgValue);
+            input.value = ''
+          }
+        })
+
+        socket.on('message', writeln)
+      </script>
+    </div>
+  </body>
+</html>
